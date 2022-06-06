@@ -1,12 +1,43 @@
 # AWS::MSK::ServerlessCluster
 
-Congratulations on starting development! Next steps:
+This resource enables the creation of AWS MSK Serverless Cluster via Cloudformation. In effect, you will now have the
+resource, AWS::MSK::ServerlessCluster available to you to deploy using Cloudformation.
 
-1. Write the JSON schema describing your resource, `aws-msk-serverlesscluster.json`
-1. Implement your resource handlers.
+This has been made possible using Cloudformation Registry. For more details about Cloudformation Registry - please look at: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/registry.html
 
-The RPDK will automatically generate the correct resource model from the schema whenever the project is built via Maven. You can also do this manually with the following command: `cfn generate`.
+## Pre-Requisites
+1. Java Version 8 or higher. Make sure you are using Java 8 by running `java -version`.
+2. Apache Maven - `brew install maven` - if you are on a Mac
+3. Cloudformation CLI and Cloudformation Java Plugin - https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/what-is-cloudformation-cli.html
+4. Install [SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html).
 
-> Please don't modify files under `target/generated-sources/rpdk`, as they will be automatically overwritten.
-
-The code uses [Lombok](https://projectlombok.org/), and [you may have to install IDE integrations](https://projectlombok.org/setup/overview) to enable auto-complete for Lombok-annotated classes.
+## Development and Local Testing
+1. For updating the resource contract update aws-msk-serverlesscluster.json and run cfn generate.
+2. Modify the appropriate handler.
+3. Run `mvn clean install`
+4. Create test files like
+```
+{
+  "desiredResourceState": {
+    "ClusterName": "testClusterName",
+    "VpcConfigs": [{
+      "SecurityGroups": ["sg-1234567890123"],
+      "SubnetIds": ["subnet-1","subnet-2","subnet-3"]
+    }],
+    "ClientAuthentication": {
+      "Sasl": {
+        "Iam": {
+          "Enabled": true
+        }
+      }
+    },
+    "Tags": {
+      "tagKeyA": "valueA",
+      "tagKeyB": "valueB"
+    }
+  },
+  "previousResourceState": {},
+  "logicalResourceIdentifier": "MyResource"
+}
+```
+5. Run the command, `cfn invoke -v resource <action> <request>` to test the respective handler. For example, run `cfn invoke -v resource CREATE <create.json>` to test the CREATE handler.

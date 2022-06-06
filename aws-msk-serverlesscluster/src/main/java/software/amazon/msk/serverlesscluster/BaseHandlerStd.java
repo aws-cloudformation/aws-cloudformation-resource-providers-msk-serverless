@@ -1,14 +1,11 @@
 package software.amazon.msk.serverlesscluster;
 
 import java.time.Duration;
-
 import org.apache.commons.lang3.StringUtils;
 
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.services.kafka.KafkaClient;
 import software.amazon.awssdk.services.kafka.model.BadRequestException;
-import software.amazon.awssdk.services.kafka.model.DescribeClusterV2Request;
-import software.amazon.awssdk.services.kafka.model.DescribeClusterV2Response;
 import software.amazon.awssdk.services.kafka.model.ForbiddenException;
 import software.amazon.awssdk.services.kafka.model.InternalServerErrorException;
 import software.amazon.awssdk.services.kafka.model.NotFoundException;
@@ -59,26 +56,6 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
         final CallbackContext callbackContext,
         final ProxyClient<KafkaClient> proxyClient,
         final Logger logger);
-
-    protected ProgressEvent<ResourceModel,
-        CallbackContext> describeCluster(
-        final AmazonWebServicesClientProxy proxy,
-        final ProxyClient<KafkaClient> proxyClient,
-        final ResourceModel model,
-        final CallbackContext context,
-        final String clientRequestToken,
-        final Logger logger) {
-
-        return proxy
-            .initiate("AWS-MSK-ServerlessCluster::GetServerlessClusterDetails", proxyClient, model, context)
-            .translateToServiceRequest(Translator::translateToReadRequest)
-            .makeServiceCall((describeClusterRequest, _proxyClient) ->
-                getServerlessClusterDetails(describeClusterRequest, _proxyClient, logger))
-            .handleError((describeClusterRequest, exception, _proxyClient, _resourceModel, _callbackContext) ->
-                handleError(exception, model, context, logger, clientRequestToken))
-            .done(describeClusterResponse -> ProgressEvent.defaultSuccessHandler(
-                Translator.translateFromReadResponse(describeClusterResponse)));
-    }
 
     protected ProgressEvent<ResourceModel,
         CallbackContext> handleError(
@@ -150,48 +127,4 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
         logger.log(String.format(LOG_MSG_MSK_API_REQUEST_FAILED, exception.getMessage()));
         throw exception;
     }
-
-//    protected ProgressEvent<ResourceModel,
-//        CallbackContext> validateCreateRequest(
-//        final ResourceModel resourceModel,
-//        final CallbackContext callbackContext,
-//        final ProgressEvent<ResourceModel, CallbackContext> progressEvent,
-//        final Logger logger) {
-//        try {
-//            validateMTlsProperty(Optional.ofNullable(resourceModel.getClientAuthentication())
-//                .map(ClientAuthentication::getTls)
-//                .orElse(null));
-//        } catch (IllegalArgumentException e) {
-//            return ProgressEvent.failed(resourceModel, callbackContext, HandlerErrorCode.InvalidRequest, String.format(
-//                "%s '%s'", e.getMessage(), "TLS"));
-//        }
-//        return ProgressEvent.progress(resourceModel, progressEvent.getCallbackContext());
-//    }
-
-    private DescribeClusterV2Response getServerlessClusterDetails(
-        final DescribeClusterV2Request describeClusterRequest,
-        final ProxyClient<KafkaClient> proxyClient,
-        final Logger logger) {
-
-        logger.log(String.format("Fetching cluster of resource %s.", describeClusterRequest.clusterArn()));
-
-        return proxyClient
-            .injectCredentialsAndInvokeV2(describeClusterRequest,proxyClient.client()::describeClusterV2);
-    }
-
-//    public static void validateMTlsProperty(final Tls mTls) {
-//        if (mTls == null || mTls.getEnabled() == null) {
-//            return;
-//        }
-//
-//        final boolean isMtlsEnabled = mTls.getEnabled();
-//        final boolean isPCAListEmptyOrNull =
-//            Optional.ofNullable(mTls.getCertificateAuthorityArnList())
-//                .map(List::isEmpty)
-//                .orElse(true);
-//
-//        if ((isMtlsEnabled && isPCAListEmptyOrNull) || (!isMtlsEnabled && !isPCAListEmptyOrNull)) {
-//            throw new IllegalArgumentException(INVALID_CLUSTER_PROPERTIES_TLS);
-//        }
-//    }
 }
