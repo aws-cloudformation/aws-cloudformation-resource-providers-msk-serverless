@@ -129,6 +129,7 @@
         "ec2:CreateTags",
         "ec2:DescribeVpcAttribute",
         "ec2:DescribeSubnets",
+        "ec2:DescribeVpcEndpoints",
         "ec2:DescribeVpcs",
         "ec2:DescribeSecurityGroups",
         "iam:AttachRolePolicy",
