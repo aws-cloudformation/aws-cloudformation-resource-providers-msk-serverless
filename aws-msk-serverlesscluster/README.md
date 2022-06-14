@@ -9,13 +9,14 @@ This has been made possible using Cloudformation Registry. For more details abou
 1. Java Version 8 or higher. Make sure you are using Java 8 by running `java -version`.
 2. Apache Maven - `brew install maven` - if you are on a Mac
 3. Cloudformation CLI and Cloudformation Java Plugin - https://docs.aws.amazon.com/cloudformation-cli/latest/userguide/what-is-cloudformation-cli.html
-4. Install [SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html).
+4. Install [SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html).
 
 ## Development and Local Testing
 1. For updating the resource contract update aws-msk-serverlesscluster.json and run cfn generate.
 2. Modify the appropriate handler.
 3. Run `mvn clean install`
-4. Create test files like
+4. Run `sam local start-lambda` to start handlers lambda
+5. Create test files like
 ```
 {
   "desiredResourceState": {

@@ -20,7 +20,7 @@
       }
     },
     "ClientAuthentication": {
-      "$ref": "#/definitions/ServerlessClientAuthentication"
+      "$ref": "#/definitions/ClientAuthentication"
     },
     "Tags": {
       "type": "object",
@@ -40,7 +40,7 @@
       "properties": {
         "SecurityGroups": {
           "type": "array",
-          "uniqueItems": false,
+          "uniqueItems": true,
           "insertionOrder": false,
           "items": {
             "type": "string"
@@ -48,7 +48,7 @@
         },
         "SubnetIds": {
           "type": "array",
-          "uniqueItems": false,
+          "uniqueItems": true,
           "insertionOrder": false,
           "items": {
             "type": "string"
@@ -59,11 +59,11 @@
         "SubnetIds"
       ]
     },
-    "ServerlessClientAuthentication": {
+    "ClientAuthentication": {
       "type": "object",
       "properties": {
         "Sasl": {
-          "$ref": "#/definitions/ServerlessSasl"
+          "$ref": "#/definitions/Sasl"
         }
       },
       "additionalProperties": false,
@@ -71,7 +71,7 @@
         "Sasl"
       ]
     },
-    "ServerlessSasl": {
+    "Sasl": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -131,10 +131,7 @@
         "ec2:DescribeSubnets",
         "ec2:DescribeVpcEndpoints",
         "ec2:DescribeVpcs",
-        "ec2:DescribeSecurityGroups",
-        "iam:AttachRolePolicy",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy"
+        "ec2:DescribeSecurityGroups"
       ],
       "timeoutInMinutes": 120
     },

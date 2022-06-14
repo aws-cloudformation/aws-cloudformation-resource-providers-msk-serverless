@@ -1,4 +1,4 @@
-# AWS::MSK::ServerlessCluster ServerlessSasl
+# AWS::MSK::ServerlessCluster ClientAuthentication
 
 ## Syntax
 
@@ -8,22 +8,22 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "<a href="#iam" title="Iam">Iam</a>" : <i><a href="iam.md">Iam</a></i>
+    "<a href="#sasl" title="Sasl">Sasl</a>" : <i><a href="sasl.md">Sasl</a></i>
 }
 </pre>
 
 ### YAML
 
 <pre>
-<a href="#iam" title="Iam">Iam</a>: <i><a href="iam.md">Iam</a></i>
+<a href="#sasl" title="Sasl">Sasl</a>: <i><a href="sasl.md">Sasl</a></i>
 </pre>
 
 ## Properties
 
-#### Iam
+#### Sasl
 
 _Required_: Yes
 
-_Type_: <a href="iam.md">Iam</a>
+_Type_: <a href="sasl.md">Sasl</a>
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)

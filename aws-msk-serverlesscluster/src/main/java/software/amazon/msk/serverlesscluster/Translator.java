@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.collect.Sets;
+
 import software.amazon.awssdk.services.kafka.model.Cluster;
 import software.amazon.awssdk.services.kafka.model.ClusterType;
 import software.amazon.awssdk.services.kafka.model.CreateClusterV2Request;
@@ -77,8 +79,8 @@ public class Translator {
         ResourceModel resourceModel = ResourceModel.builder()
             .arn(describeClusterResponse.clusterInfo().clusterArn())
             .clusterName(describeClusterResponse.clusterInfo().clusterName())
-            .clientAuthentication(software.amazon.msk.serverlesscluster.ServerlessClientAuthentication.builder()
-                .sasl(software.amazon.msk.serverlesscluster.ServerlessSasl.builder()
+            .clientAuthentication(software.amazon.msk.serverlesscluster.ClientAuthentication.builder()
+                .sasl(software.amazon.msk.serverlesscluster.Sasl.builder()
                     .iam(software.amazon.msk.serverlesscluster.Iam.builder()
                         .enabled(describeClusterResponse.clusterInfo().serverless().clientAuthentication().sasl().iam()
                             .enabled())
@@ -87,8 +89,8 @@ public class Translator {
                 .build())
             .vpcConfigs(describeClusterResponse.clusterInfo().serverless().vpcConfigs().stream().map(vpcConfig ->
                 software.amazon.msk.serverlesscluster.VpcConfig.builder()
-                    .securityGroups(vpcConfig.securityGroupIds())
-                    .subnetIds(vpcConfig.subnetIds())
+                    .securityGroups(Sets.newHashSet(vpcConfig.securityGroupIds()))
+                    .subnetIds(Sets.newHashSet(vpcConfig.subnetIds()))
                     .build()).collect(Collectors.toSet()))
             .tags(describeClusterResponse.clusterInfo().tags())
             .build();
@@ -106,18 +108,20 @@ public class Translator {
     }
 
     /**
-     * Request to update properties of a previously created resource
+     * Request to list resources (Serverless clusters only) within aws account
      *
      * @param nextToken token passed to the aws service describe resource request
      * @return listClustersRequest the aws service request to describe resources within aws account
      */
     static ListClustersV2Request translateToListRequest(final String nextToken) {
-        return ListClustersV2Request.builder().nextToken(nextToken).build();
+        return ListClustersV2Request.builder()
+            .clusterTypeFilter(ClusterType.SERVERLESS.name())
+            .nextToken(nextToken)
+            .build();
     }
 
     /**
-     * Translates resource objects from sdk into a resource model and filter out provisioned results
-     * (primary identifier only)
+     * Translates resource objects from sdk into a resource model (primary identifier only)
      *
      * @param listClustersResponse the aws service describe resource response
      * @return list of resource models
@@ -125,7 +129,6 @@ public class Translator {
     static List<ResourceModel> translateFromListResponse(final ListClustersV2Response listClustersResponse) {
         final List<Cluster> clustersList = listClustersResponse.clusterInfoList();
         return streamOfOrEmpty(clustersList)
-            .filter(cluster -> ClusterType.SERVERLESS.equals(cluster.clusterType()))
             .map(cluster -> ResourceModel.builder().arn(cluster.clusterArn()).build())
             .collect(Collectors.toList());
     }

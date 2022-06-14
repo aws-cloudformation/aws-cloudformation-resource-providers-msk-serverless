@@ -3,11 +3,12 @@ package software.amazon.msk.serverlesscluster;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import org.assertj.core.util.Sets;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import software.amazon.awssdk.awscore.AwsRequest;
 import software.amazon.awssdk.awscore.AwsResponse;
@@ -31,11 +32,11 @@ public class AbstractTestBase {
     protected static final String CLUSTER_NAME_2 = "ClusterName2";
     protected static final String CLUSTER_ARN = "arn:aws:kafka:us-west-2:083674906042:cluster/ClusterName";
     protected static final String CLUSTER_ARN_2 = "arn:aws:kafka:us-west-2:083674906042:cluster/ClusterName2";
-    protected static final List<String> SECURITY_GROUP_IDS = Lists.newArrayList("SecurityGroup");
-    protected static final List<String> SUBNET_IDS = Lists.newArrayList("Subnets");
-    protected static final ServerlessClientAuthentication CLIENT_AUTHENTICATION =
-        ServerlessClientAuthentication.builder()
-            .sasl(ServerlessSasl.builder().iam(Iam.builder().enabled(true).build()).build()).build();
+    protected static final Set<String> SECURITY_GROUP_IDS = Sets.newHashSet("SecurityGroup");
+    protected static final Set<String> SUBNET_IDS =  Sets.newHashSet("Subnets");
+    protected static final ClientAuthentication CLIENT_AUTHENTICATION =
+        ClientAuthentication.builder()
+            .sasl(Sasl.builder().iam(Iam.builder().enabled(true).build()).build()).build();
     protected static final List<VpcConfig> VPC_CONFIG_LIST = Lists.newArrayList(
         VpcConfig.builder().subnetIds(SUBNET_IDS).securityGroups(SECURITY_GROUP_IDS).build());
     protected static final Map<String, String> TAGS = new HashMap<String, String>() {

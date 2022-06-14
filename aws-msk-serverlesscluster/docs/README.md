@@ -14,7 +14,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Properties" : {
         "<a href="#clustername" title="ClusterName">ClusterName</a>" : <i>String</i>,
         "<a href="#vpcconfigs" title="VpcConfigs">VpcConfigs</a>" : <i>[ <a href="vpcconfig.md">VpcConfig</a>, ... ]</i>,
-        "<a href="#clientauthentication" title="ClientAuthentication">ClientAuthentication</a>" : <i><a href="serverlessclientauthentication.md">ServerlessClientAuthentication</a></i>,
+        "<a href="#clientauthentication" title="ClientAuthentication">ClientAuthentication</a>" : <i><a href="clientauthentication.md">ClientAuthentication</a></i>,
         "<a href="#tags" title="Tags">Tags</a>" : <i><a href="tags.md">Tags</a></i>
     }
 }
@@ -28,7 +28,7 @@ Properties:
     <a href="#clustername" title="ClusterName">ClusterName</a>: <i>String</i>
     <a href="#vpcconfigs" title="VpcConfigs">VpcConfigs</a>: <i>
       - <a href="vpcconfig.md">VpcConfig</a></i>
-    <a href="#clientauthentication" title="ClientAuthentication">ClientAuthentication</a>: <i><a href="serverlessclientauthentication.md">ServerlessClientAuthentication</a></i>
+    <a href="#clientauthentication" title="ClientAuthentication">ClientAuthentication</a>: <i><a href="clientauthentication.md">ClientAuthentication</a></i>
     <a href="#tags" title="Tags">Tags</a>: <i><a href="tags.md">Tags</a></i>
 </pre>
 
@@ -58,9 +58,9 @@ _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/l
 
 _Required_: Yes
 
-_Type_: <a href="serverlessclientauthentication.md">ServerlessClientAuthentication</a>
+_Type_: <a href="clientauthentication.md">ClientAuthentication</a>
 
-_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
 #### Tags
 

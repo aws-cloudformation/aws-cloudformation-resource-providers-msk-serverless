@@ -13,18 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.services.kafka.KafkaClient;
-import software.amazon.awssdk.services.kafka.model.BrokerNodeGroupInfo;
-import software.amazon.awssdk.services.kafka.model.ClientAuthentication;
-import software.amazon.awssdk.services.kafka.model.Cluster;
 import software.amazon.awssdk.services.kafka.model.ClusterState;
-import software.amazon.awssdk.services.kafka.model.ClusterType;
 import software.amazon.awssdk.services.kafka.model.KafkaException;
 import software.amazon.awssdk.services.kafka.model.ListClustersV2Request;
 import software.amazon.awssdk.services.kafka.model.ListClustersV2Response;
-import software.amazon.awssdk.services.kafka.model.Provisioned;
 import software.amazon.awssdk.services.kafka.model.ServiceUnavailableException;
 import software.amazon.awssdk.services.kafka.model.TooManyRequestsException;
-import software.amazon.awssdk.services.kafka.model.Unauthenticated;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.HandlerErrorCode;
 import software.amazon.cloudformation.proxy.OperationStatus;
@@ -74,8 +68,7 @@ public class ListHandlerTest extends AbstractTestBase {
     public void handleRequest_SimpleSuccess() {
         // Given
         final ListClustersV2Response listClustersResponse =
-            ListClustersV2Response.builder().clusterInfoList(getServerlessCluster(ClusterState.ACTIVE),
-                getProvisionedCluster(ClusterState.ACTIVE)).build();
+            ListClustersV2Response.builder().clusterInfoList(getServerlessCluster(ClusterState.ACTIVE)).build();
         when(proxyClient.client().listClustersV2(any(ListClustersV2Request.class)))
             .thenReturn(listClustersResponse);
 
@@ -127,25 +120,5 @@ public class ListHandlerTest extends AbstractTestBase {
         assertThat(response.getErrorCode()).isEqualTo(cfnError);
 
         verify(proxyClient.client()).listClustersV2(any(ListClustersV2Request.class));
-    }
-
-    private Cluster getProvisionedCluster(ClusterState clusterState) {
-        return Cluster.builder()
-            .state(clusterState)
-            .clusterName(CLUSTER_NAME_2)
-            .clusterArn(CLUSTER_ARN_2)
-            .clusterType(ClusterType.PROVISIONED)
-            .provisioned(Provisioned.builder()
-                .clientAuthentication(ClientAuthentication.builder()
-                    .unauthenticated(Unauthenticated.builder().enabled(true).build())
-                    .build())
-                .brokerNodeGroupInfo(BrokerNodeGroupInfo.builder()
-                    .securityGroups(SECURITY_GROUP_IDS)
-                    .clientSubnets(SUBNET_IDS)
-                    .build())
-                .build()
-            )
-            .tags(TAGS)
-            .build();
     }
 }
