@@ -93,7 +93,6 @@ public class CreateHandler extends BaseHandlerStd {
 
         switch (currentClusterState) {
             case ACTIVE:
-            case DELETING:
                 logger.log(String.format("Cluster %s is stabilized, current state is %s", clusterArn,
                     currentClusterState));
                 return true;
