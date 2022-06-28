@@ -11,6 +11,7 @@ import software.amazon.cloudformation.exceptions.CfnNotFoundException;
 import software.amazon.cloudformation.exceptions.CfnNotStabilizedException;
 import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
 import software.amazon.cloudformation.proxy.Logger;
+import software.amazon.cloudformation.proxy.OperationStatus;
 import software.amazon.cloudformation.proxy.ProgressEvent;
 import software.amazon.cloudformation.proxy.ProxyClient;
 import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
@@ -39,7 +40,11 @@ public class DeleteHandler extends BaseHandlerStd {
                     .stabilize(this::stabilizedOnDelete)
                     .handleError((deleteClusterRequest, exception, _proxyClient, _resourceModel, _callbackContext) ->
                         handleError(exception, model,  callbackContext, logger, clientRequestToken))
-                    .success());
+                    .done(
+                        awsResponse ->
+                            ProgressEvent.<ResourceModel, CallbackContext>builder()
+                                .status(OperationStatus.SUCCESS)
+                                .build()));
     }
 
     /**

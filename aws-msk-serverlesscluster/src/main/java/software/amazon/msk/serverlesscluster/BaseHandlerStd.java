@@ -25,7 +25,7 @@ import software.amazon.cloudformation.proxy.delay.Constant;
 public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
 
     public static final String LOG_MSG_MSK_API_REQUEST_FAILED = "MSK API request failed: %s";
-    public static final String LOG_MSG_MSK_SELF_SERVICE_INTERNAL_FAILURE = "MSK Self-Service Internal Failure: %s";
+    public static final String LOG_MSG_MSK_INTERNAL_FAILURE = "MSK Internal Failure: %s";
     protected static final String MSK_API_PARAM_NAME_CLUSTERARN = "clusterArn";
     protected static final String INVALID_PARAMETER_EXCEPTION = "One or more of the parameters are not valid";
     protected static final Constant STABILIZATION_DELAY_CREATE =
@@ -88,13 +88,13 @@ public abstract class BaseHandlerStd extends BaseHandler<CallbackContext> {
         }
 
         if (exception instanceof InternalServerErrorException) {
-            logger.log(String.format(LOG_MSG_MSK_SELF_SERVICE_INTERNAL_FAILURE, exception.getMessage()));
+            logger.log(String.format(LOG_MSG_MSK_INTERNAL_FAILURE, exception.getMessage()));
             return ProgressEvent.failed(model, callbackContext, HandlerErrorCode.InternalFailure, String.format(
                 "[ClientRequestToken: %s] %s", clientRequestToken, exception.getMessage()));
         }
 
         if (exception instanceof ServiceUnavailableException) {
-            logger.log(String.format(LOG_MSG_MSK_SELF_SERVICE_INTERNAL_FAILURE, exception.getMessage()));
+            logger.log(String.format(LOG_MSG_MSK_INTERNAL_FAILURE, exception.getMessage()));
             return ProgressEvent.failed(model, callbackContext, HandlerErrorCode.ServiceInternalError, String.format(
                 "[ClientRequestToken: %s] %s", clientRequestToken, exception.getMessage()));
         }
