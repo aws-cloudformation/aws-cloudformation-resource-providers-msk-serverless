@@ -2,7 +2,9 @@ package software.amazon.msk.serverlesscluster;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,6 +22,8 @@ import software.amazon.awssdk.services.kafka.model.ListClustersV2Response;
 import software.amazon.awssdk.services.kafka.model.ServerlessClientAuthentication;
 import software.amazon.awssdk.services.kafka.model.ServerlessRequest;
 import software.amazon.awssdk.services.kafka.model.ServerlessSasl;
+import software.amazon.awssdk.services.kafka.model.TagResourceRequest;
+import software.amazon.awssdk.services.kafka.model.UntagResourceRequest;
 import software.amazon.awssdk.services.kafka.model.VpcConfig;
 
 /**
@@ -131,6 +135,36 @@ public class Translator {
         return streamOfOrEmpty(clustersList)
             .map(cluster -> ResourceModel.builder().arn(cluster.clusterArn()).build())
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Request to tag resources within aws account
+     *
+     * @param model resource model
+     * @param addedTags tags to be added
+     * @return tagResourceRequest the aws service request to tag resources within aws account
+     */
+    static TagResourceRequest translateToTagResourceRequest(final ResourceModel model,
+                                                            final Map<String, String> addedTags) {
+        return TagResourceRequest.builder()
+            .resourceArn(model.getArn())
+            .tags(addedTags)
+            .build();
+    }
+
+    /**
+     * Request to untag resources within aws account
+     *
+     * @param model resource model
+     * @param removedTags keys of the tags to be removed
+     * @return untagResourceRequest the aws service request to untag resources within aws account
+     */
+    static UntagResourceRequest translateToUntagResourceRequest(final ResourceModel model,
+                                                                final Set<String> removedTags) {
+        return UntagResourceRequest.builder()
+            .resourceArn(model.getArn())
+            .tagKeys(removedTags)
+            .build();
     }
 
     private static <T> Stream<T> streamOfOrEmpty(final Collection<T> collection) {

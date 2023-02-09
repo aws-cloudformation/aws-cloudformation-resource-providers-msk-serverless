@@ -29,9 +29,7 @@ public class AbstractTestBase {
 
     protected static final String CLIENT_REQUEST_TOKEN = "ClientToken";
     protected static final String CLUSTER_NAME = "ClusterName";
-    protected static final String CLUSTER_NAME_2 = "ClusterName2";
     protected static final String CLUSTER_ARN = "arn:aws:kafka:us-west-2:083674906042:cluster/ClusterName";
-    protected static final String CLUSTER_ARN_2 = "arn:aws:kafka:us-west-2:083674906042:cluster/ClusterName2";
     protected static final Set<String> SECURITY_GROUP_IDS = Sets.newHashSet("SecurityGroup");
     protected static final Set<String> SUBNET_IDS =  Sets.newHashSet("Subnets");
     protected static final ClientAuthentication CLIENT_AUTHENTICATION =
@@ -43,6 +41,24 @@ public class AbstractTestBase {
         {
             put("TEST_TAG1", "TEST_TAG_VALUE1");
             put("TEST_TAG2", "TEST_TAG_VALUE2");
+        }
+    };
+    protected static final Map<String, String> TAGS_ADDED = new HashMap<String, String>() {
+        {
+            put("TEST_TAG1", "TEST_TAG_VALUE1");
+            put("TEST_TAG2", "TEST_TAG_VALUE2");
+            put("TEST_TAG3", "TEST_TAG_VALUE3");
+        }
+    };
+    protected static final Map<String, String> TAGS_REMOVED = new HashMap<String, String>() {
+        {
+            put("TEST_TAG1", "TEST_TAG_VALUE1");
+        }
+    };
+    protected static final Map<String, String> TAGS_ALTERED = new HashMap<String, String>() {
+        {
+            put("TEST_TAG1", "TEST_TAG_VALUE1");
+            put("TEST_TAG3", "TEST_TAG_VALUE3");
         }
     };
 
@@ -103,6 +119,16 @@ public class AbstractTestBase {
             .clientAuthentication(CLIENT_AUTHENTICATION)
             .vpcConfigs(Sets.newHashSet(VPC_CONFIG_LIST))
             .tags(TAGS)
+            .build();
+    }
+
+    protected static ResourceModel buildResourceModelWithTags(Map<String, String> tags) {
+        return ResourceModel.builder()
+            .clusterName(CLUSTER_NAME)
+            .arn(CLUSTER_ARN)
+            .clientAuthentication(CLIENT_AUTHENTICATION)
+            .vpcConfigs(Sets.newHashSet(VPC_CONFIG_LIST))
+            .tags(tags)
             .build();
     }
 
