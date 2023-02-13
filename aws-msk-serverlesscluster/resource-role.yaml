@@ -43,6 +43,7 @@ Resources:
                 - "kafka:DescribeClusterV2"
                 - "kafka:ListClustersV2"
                 - "kafka:TagResource"
+                - "kafka:UntagResource"
                 Resource: "*"
 Outputs:
   ExecutionRoleArn:

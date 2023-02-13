@@ -104,8 +104,7 @@
   "createOnlyProperties": [
     "/properties/ClusterName",
     "/properties/VpcConfigs",
-    "/properties/ClientAuthentication",
-    "/properties/Tags"
+    "/properties/ClientAuthentication"
   ],
   "primaryIdentifier": [
     "/properties/Arn"
@@ -116,7 +115,7 @@
   "tagging": {
     "taggable": true,
     "tagOnCreate": true,
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "cloudFormationSystemTags": true,
     "tagProperty": "/properties/Tags"
   },
@@ -138,6 +137,12 @@
     "read": {
       "permissions": [
         "kafka:DescribeClusterV2"
+      ]
+    },
+    "update": {
+      "permissions": [
+        "kafka:TagResource",
+        "kafka:UntagResource"
       ]
     },
     "delete": {
